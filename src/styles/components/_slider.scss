@@ -18,6 +18,7 @@ $tick-size: abs.rem(8);
       text-align: left;
       hyphens: auto;
       width: initial;
+      max-width: abs.rem(180);
     }
   }
 }
