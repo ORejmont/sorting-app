@@ -158,18 +158,6 @@ export const products: Product[] = [
     lastUpdated: "2024-12-18T18:00:00Z",
   },
   {
-    id: "6349",
-    name: "AFTER EIGHT Winter Fondants 57g",
-    price: 95,
-    priceVat: 115,
-    margin: 28,
-    stock: 0,
-    categoryId: "cokolady",
-    popularityScore: 67,
-    sold: 210,
-    lastUpdated: "2025-01-08T14:20:00Z",
-  },
-  {
     id: "6352",
     name: "AFTER EIGHT Winter Fondants – dárkový box",
     price: 99,

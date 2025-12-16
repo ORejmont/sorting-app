@@ -14,10 +14,10 @@ $tick-size: abs.rem(8);
 
     .dropdown-btn {
       margin-right: abs.rem(5);
-      width: abs.rem(100); // abs.rem(162);
       word-break: break-word;
       text-align: left;
       hyphens: auto;
+      width: initial;
     }
   }
 }
