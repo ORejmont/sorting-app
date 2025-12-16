@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import Dropdown from "./Dropdown";
 import SliderGroup from "./SliderGroup";
 import { sliders } from "./slidersData";
@@ -71,8 +71,45 @@ export default function SortingSettings({
     }
   };
 
+  const sliderContainerRef = useRef<HTMLDivElement>(null);
+
+  const updateDropdownWidths = () => {
+    if (!sliderContainerRef.current) return;
+
+    const dropdowns =
+      sliderContainerRef.current.querySelectorAll<HTMLButtonElement>(
+        ".dropdown-btn"
+      );
+
+    // Reset všech šířek na auto, aby se měřil přirozený obsah
+    dropdowns.forEach((btn) => (btn.style.width = "auto"));
+
+    // Po vykreslení DOM (nový text) měříme šířku
+    requestAnimationFrame(() => {
+      let maxWidth = 0;
+
+      dropdowns.forEach((btn) => {
+        const width = btn.getBoundingClientRect().width;
+        if (width > maxWidth) maxWidth = width;
+      });
+
+      dropdowns.forEach((btn) => (btn.style.width = `${maxWidth}px`));
+    });
+  };
+
+  // Použijeme useLayoutEffect místo useEffect
+  useLayoutEffect(() => {
+    if (selectedSort === "combined") {
+      updateDropdownWidths(); // měření hned po renderu
+
+      window.addEventListener("resize", updateDropdownWidths);
+      return () => window.removeEventListener("resize", updateDropdownWidths);
+    }
+  }, [selectedSort, internalAttributes]);
+
   return (
     <div className="settings">
+      {/* Kategorie dropdown */}
       <div className={`section ${!selectedCategory ? "not-selected" : ""}`}>
         <Dropdown
           label="Vyberte kategorii"
@@ -92,14 +129,20 @@ export default function SortingSettings({
           />
 
           {selectedSort === "combined" && (
-            <div className="slider-container priority-slider">
+            <div
+              className="slider-container priority-slider"
+              ref={sliderContainerRef}
+            >
               {sliders.map((s) => (
                 <SliderGroup
                   key={s.key}
                   slider={s}
                   onChange={(val) => onSliderChange(s.key, val)}
                   attributesOptions={attributesOptions}
-                  onAttributeChange={(attr) => onAttributeChange(s.key, attr)}
+                  onAttributeChange={(attr) => {
+                    onAttributeChange(s.key, attr);
+                    updateDropdownWidths(); // měření po změně dropdownu
+                  }}
                 />
               ))}
             </div>

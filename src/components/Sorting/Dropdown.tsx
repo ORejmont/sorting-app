@@ -13,6 +13,7 @@ interface DropdownProps {
   options: { label: string; value: string }[];
   selected?: string;
   onChange?: (value: string) => void;
+  onLabelUpdate?: () => void;
 }
 
 /*
@@ -23,6 +24,7 @@ export default function Dropdown({
   options,
   selected,
   onChange,
+  onLabelUpdate,
 }: DropdownProps) {
   /*
     open = určuje, jestli je dropdown otevřený nebo zavřený
@@ -64,6 +66,9 @@ export default function Dropdown({
 
     // Nastavíme text do tlačítka
     setCurrentLabel(opt.label);
+
+    // zavoláme callback po aktualizaci
+    onLabelUpdate?.();
 
     // Zavřeme dropdown
     setOpen(false);
