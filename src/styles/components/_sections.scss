@@ -1,0 +1,31 @@
+@use '../abstracts' as abs;
+
+.section {
+  &.not-selected {
+    background-color: abs.$color-primary-hover;
+    background-color: #ffb9b9;
+    background-color: #ffc5b9;
+
+    .dropdown-label {
+      color: #fff;
+      font-weight: 700;
+      color: abs.$color-primary;
+      color: #a74600;
+    }
+
+    .dropdown-btn {
+      background-color: #fff;
+      border-color: #fff;
+
+      &:hover {
+        background-color: abs.$color-grey-light;
+        border-color: abs.$color-grey-light;
+      }
+    }
+  }
+
+  margin-bottom: abs.rem(10);
+  @include abs.background;
+  padding: abs.rem(15);
+  border-radius: abs.$border-radius-small;
+}

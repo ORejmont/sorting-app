@@ -1,0 +1,5 @@
+@use '../abstracts' as abs;
+
+h1 {
+  margin-bottom: abs.rem(15);
+}

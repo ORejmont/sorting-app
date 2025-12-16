@@ -1,0 +1,75 @@
+@use '../abstracts' as abs;
+
+.product {
+  @include abs.background;
+  border-radius: abs.$border-radius;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  img {
+    width: 100%;
+    border-top-left-radius: abs.$border-radius;
+    border-top-right-radius: abs.$border-radius;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+  }
+
+  .title {
+    margin: abs.rem(10) abs.rem(10) auto abs.rem(10);
+    font-size: abs.rem(14);
+    font-weight: 600;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .p-bottom {
+    margin-left: abs.rem(10);
+    margin-right: abs.rem(10);
+    margin-bottom: abs.rem(10);
+  }
+
+  .price {
+    font-size: abs.rem(14);
+    color: #28a745;
+    background-color: #b7ffc8;
+    text-align: center;
+    padding: abs.rem(5);
+    border-radius: abs.$border-radius-small;
+    font-weight: 600;
+    margin-top: abs.rem(5);
+  }
+}
+
+/* Animace odchodu (fade out + dolů) */
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-out {
+  animation: fadeOutDown 0.5s forwards;
+}
+
+.fade-in {
+  animation: fadeInLeft 0.5s forwards;
+}

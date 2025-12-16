@@ -1,0 +1,12 @@
+@use '../abstracts' as abs;
+@use './navigation' as nav;
+
+.settings-wrapper {
+  padding: abs.rem(20);
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}

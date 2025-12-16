@@ -1,0 +1,96 @@
+@use '../abstracts' as abs;
+
+$dropdown-height: abs.rem(200);
+
+.dropdown-wrapper {
+  position: relative;
+
+  &.open {
+    .dropdown-menu {
+      max-height: $dropdown-height;
+    }
+  }
+}
+
+.dropdown-label {
+  font-size: abs.rem(14);
+  color: abs.$color-grey;
+  margin-bottom: abs.rem(5);
+  display: block;
+}
+
+.dropdown-btn {
+  width: 100%;
+  padding: abs.rem(10) abs.rem(14);
+  background-color: abs.$color-grey-light;
+  border: 1px solid abs.$color-grey-light;
+  border-radius: abs.$border-radius-small;
+  cursor: pointer;
+  font-size: abs.rem(15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color .3s ease-out, border-color .3s ease-out;
+
+  &::after {
+    content: '';
+    background-image: url(../../assets/arrow-down-primary-color.svg);
+    width: abs.rem(14);
+    min-width: abs.rem(14);
+    height: abs.rem(14);
+    display: block;
+    margin-left: abs.rem(10);
+  }
+
+  &:hover {
+    border-color: abs.$color-grey-light-hover;
+    background-color: abs.$color-grey-light-hover;
+  }
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: auto;
+  max-height: 0;
+  min-width: 100%;
+  @include abs.background;
+  border-radius: abs.$border-radius-small abs.$border-radius-small calc(abs.$border-radius-small * 2) calc(abs.$border-radius-small * 2);
+  transition: max-height .3s ease-out;
+  z-index: 1;
+  overflow: hidden;
+
+  .dropdown-menu-inner {
+    max-height: $dropdown-height;
+    scrollbar-color: abs.$color-primary transparent;
+    overflow-y: auto;
+
+    .dropdown-option {
+      padding: abs.rem(10) abs.rem(14);
+      cursor: pointer;
+      border-bottom: 1px solid abs.$color-grey-soft-hover;
+      text-align: center;
+      font-size: abs.rem(15);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.active {
+        // background-color: abs.$color-grey-soft-hover;
+
+        &::before {
+          content: '✓';
+          font-weight: 600;
+          margin-right: abs.rem(5);
+          color: abs.$color-primary;
+        }
+      }
+
+      &:hover {
+        background-color: abs.$color-grey-soft-hover;
+      }
+    }
+  }
+}

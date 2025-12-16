@@ -1,0 +1,24 @@
+@use 'abstracts' as abs;
+@use 'base';
+@use 'layout';
+@use 'components';
+@use 'animations';
+@use 'pages';
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  max-width: 140px;
+}
+
+th {
+  background: #f3f4f6;
+}

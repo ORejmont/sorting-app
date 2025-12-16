@@ -1,0 +1,136 @@
+@use '../abstracts' as abs;
+
+$tick-size: abs.rem(8);
+
+.priority-slider {
+  margin-top: abs.rem(10);
+
+  .dropdown-wrapper {
+    margin: 0;
+
+    .dropdown-label {
+      display: none;
+    }
+
+    .dropdown-btn {
+      margin-right: abs.rem(5);
+      width: abs.rem(100); // abs.rem(162);
+      word-break: break-word;
+      text-align: left;
+      hyphens: auto;
+    }
+  }
+}
+
+.slider-group {
+  display: flex;
+  margin-bottom: abs.rem(10);
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  label {
+    flex: 0 0 abs.rem(100);
+    margin-right: abs.rem(5);
+    background-color: abs.$color-grey-light;
+    border-radius: abs.$border-radius-small;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: abs.rem(15);
+    line-height: 1;
+  }
+
+  .slider-wrapper {
+    display: flex;
+    align-items: center;
+    border-radius: abs.$border-radius-small;
+    background-color: abs.$color-grey-light;
+    flex: 1;
+    padding: 0 abs.rem(10) 0 abs.rem(20);
+
+    .custom-slider {
+      position: relative;
+      width: 100%;
+      user-select: none;
+      flex: 1;
+      padding: abs.rem(10) 0;
+      height: 100%;
+      cursor: pointer;
+
+      .track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: abs.rem(6);
+        background-color: #fff;
+        background-color: abs.$color-grey-light-over;
+        border-radius: abs.rem(6);
+        transform: translateY(-50%);
+      }
+
+      .progress {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        height: abs.rem(6);
+        width: 0%;
+        background: abs.$color-primary;
+        border-radius: abs.rem(6);
+        transform: translateY(-50%);
+      }
+
+      .thumb {
+        position: absolute;
+        top: 50%;
+        width: abs.rem(18);
+        height: abs.rem(18);
+        background: abs.$color-primary;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .ticks {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: calc($tick-size / -2);
+        width: calc(100% + $tick-size);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+        opacity: 0;
+
+        div {
+          width: $tick-size;
+          height: $tick-size;
+          border-radius: 50%;
+          background: #ccc;
+
+          &.active {
+            background: abs.$color-primary;
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+  }
+
+  .value-display {
+    font-size: 0;
+    line-height: 0;
+    margin-left: abs.rem(15);
+    flex: 0 0 abs.rem(30);
+    text-align: center;
+
+    span {
+      font-size: abs.rem(16);
+      line-height: 1;
+    }
+  }
+}

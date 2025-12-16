@@ -1,0 +1,34 @@
+// .page-sorting {
+//   .overall-wrapper {
+//     display: flex;
+
+//     .content-wrapper {
+//       flex: 1;
+//       overflow-x: hidden;
+//       overflow-y: auto;
+//       max-height: 100vh;
+//     }
+//   }
+
+//   .products {
+//     display: flex;
+//     flex-wrap: wrap;
+//     align-items: stretch;
+//     margin: 5px;
+//     width: calc(100% - 10px);
+
+//     .product {
+//       width: calc(100% / 2 - 10px);
+//       margin: 5px;
+//     }
+//   }
+// }
+
+.sorting-page {
+  display: flex;
+  height: 100%;
+
+  .settings-wrapper {
+    flex: 1;
+  }
+}

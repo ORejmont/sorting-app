@@ -1,0 +1,27 @@
+@use '../abstracts' as abs;
+
+.btn {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: abs.rem(10) abs.rem(25);
+  @include abs.background;
+  border-radius: abs.$border-radius-small;
+  font-size: abs.rem(14);
+  cursor: pointer;
+
+  transition-duration: .3s;
+}
+
+.btn-primary {
+  background-color: abs.$color-primary;
+  border-color: abs.$color-primary;
+  color: #fff;
+  font-weight: 600;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: abs.$color-primary-hover;
+      border-color: abs.$color-primary-hover;
+    }
+  }
+}
