@@ -8,12 +8,20 @@ import { useState, useRef, useEffect } from "react";
   - selected: výchozí vybraná hodnota
   - onChange: funkce, která se zavolá při změně (např. pro rodičovskou komponentu)
 */
+interface DropdownOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
 interface DropdownProps {
   label?: string;
-  options: { label: string; value: string }[];
+  options: DropdownOption[];
   selected?: string;
   onChange?: (value: string) => void;
   onLabelUpdate?: () => void;
+  disabled?: boolean;
+  className?: string;
 }
 
 /*
@@ -25,6 +33,8 @@ export default function Dropdown({
   selected,
   onChange,
   onLabelUpdate,
+  disabled = false,
+  className = "", // default hodnota
 }: DropdownProps) {
   /*
     open = určuje, jestli je dropdown otevřený nebo zavřený
@@ -42,9 +52,8 @@ export default function Dropdown({
     Pokud přijde "selected", najdeme k němu label z options
     Pokud ne, zobrazíme "-"
   */
-  const [currentLabel, setCurrentLabel] = useState(
-    options.find((opt) => opt.value === selected)?.label || "-"
-  );
+  const currentLabel =
+    options.find((opt) => opt.value === selected)?.label || "-";
 
   /*
     menuRef = reference na HTML element ".dropdown-menu"
@@ -60,21 +69,11 @@ export default function Dropdown({
     Funkce, která se zavolá při kliknutí na položku v menu
   */
   const handleSelect = (value: string) => {
-    // Najdeme zvolenou možnost podle value
     const opt = options.find((o) => o.value === value);
     if (!opt) return;
 
-    // Nastavíme text do tlačítka
-    setCurrentLabel(opt.label);
-
-    // zavoláme callback po aktualizaci
     onLabelUpdate?.();
-
-    // Zavřeme dropdown
     setOpen(false);
-
-    // Pokud existuje callback, pošleme value ven
-    // (např. rodiči komponenty)
     onChange?.(opt.value);
   };
 
@@ -124,7 +123,7 @@ export default function Dropdown({
     HTML část komponenty
   */
   return (
-    <div className={`dropdown-wrapper ${open ? "open" : ""}`}>
+    <div className={`dropdown-wrapper ${open ? "open" : ""} ${className}`}>
       {/* Popisek nad dropdownem */}
       <span className="dropdown-label">{label}</span>
 
@@ -132,7 +131,8 @@ export default function Dropdown({
       <button
         ref={buttonRef}
         className="dropdown-btn"
-        onClick={() => setOpen(!open)} // toggle otevření
+        disabled={disabled}
+        onClick={() => !disabled && setOpen(!open)}
       >
         {currentLabel}
       </button>
@@ -144,9 +144,11 @@ export default function Dropdown({
             <div
               className={`dropdown-option ${
                 opt.label === currentLabel ? "active" : ""
-              }`}
+              } ${opt.disabled ? "disabled" : ""}`}
               key={opt.value}
-              onClick={() => handleSelect(opt.value)}
+              onClick={() =>
+                !disabled && !opt.disabled && handleSelect(opt.value)
+              }
             >
               {opt.label}
             </div>

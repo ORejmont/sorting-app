@@ -4,20 +4,26 @@ import Dropdown from "./Dropdown";
 
 interface SliderGroupProps {
   slider: SliderConfig;
+  value: number;
+  disabled?: boolean;
   onChange?: (value: number) => void;
   attributesOptions: { label: string; value: string }[];
   onAttributeChange?: (value: string) => void;
+  usedAttributes?: string[];
+  selectedAttr?: string;
 }
 
 export default function SliderGroup({
   slider,
+  value,
+  disabled = false,
   onChange,
   attributesOptions,
   onAttributeChange,
+  usedAttributes = [],
+  selectedAttr,
 }: SliderGroupProps) {
-  const [value, setValue] = useState(slider.value);
   const [inverted, setInverted] = useState(false);
-  const [selectedAttr, setSelectedAttr] = useState(attributesOptions[0].value);
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const max = slider.max;
@@ -25,20 +31,15 @@ export default function SliderGroup({
   const step = slider.step;
 
   const updateValue = (clientX: number) => {
-    if (!sliderRef.current) return;
-    const rect = sliderRef.current.getBoundingClientRect();
+    if (!sliderRef.current || disabled) return;
 
-    // pozice uvnitř slideru v px
+    const rect = sliderRef.current.getBoundingClientRect();
     let pos = clientX - rect.left;
     pos = Math.max(0, Math.min(pos, rect.width));
 
-    // počet kroků (nejbližší)
     const stepsCount = Math.round(((pos / rect.width) * (max - min)) / step);
-
-    // nová hodnota
     const newValue = min + stepsCount * step;
 
-    setValue(newValue);
     onChange?.(newValue);
   };
 
@@ -61,10 +62,14 @@ export default function SliderGroup({
     <div className="slider-group">
       {/* Dropdown pro atribut */}
       <Dropdown
-        options={attributesOptions}
+        disabled={disabled}
+        options={attributesOptions.map((opt) => ({
+          ...opt,
+          disabled:
+            usedAttributes.includes(opt.value) && opt.value !== selectedAttr,
+        }))}
         selected={selectedAttr}
         onChange={(val) => {
-          setSelectedAttr(val);
           onAttributeChange?.(val);
         }}
       />
@@ -72,9 +77,9 @@ export default function SliderGroup({
       {/* Slider */}
       <div className="slider-wrapper">
         <div
-          className="custom-slider"
+          className={`custom-slider ${disabled ? "disabled" : ""}`}
           ref={sliderRef}
-          onMouseDown={handleMouseDown}
+          onMouseDown={disabled ? undefined : handleMouseDown}
         >
           <div className="track"></div>
           <div className="progress" style={{ width: `${percent}%` }}></div>

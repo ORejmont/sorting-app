@@ -3,6 +3,7 @@ import Dropdown from "./Dropdown";
 import SliderGroup from "./SliderGroup";
 import { sliders } from "./slidersData";
 import { categories } from "../../mock/categories";
+import { sliderPresets } from "./sliderPresets";
 
 const sortOptions = [
   { label: "Kombinované", value: "combined" },
@@ -46,15 +47,6 @@ export default function SortingSettings({
     Record<string, number>
   >(sliders.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {}));
 
-  const [internalAttributes, setInternalAttributes] = useState<
-    Record<string, string>
-  >(
-    sliders.reduce(
-      (acc, s) => ({ ...acc, [s.key]: attributesOptions[0].value }),
-      {}
-    )
-  );
-
   const onSliderChange = (key: string, value: number) => {
     if (handleSliderChange) {
       handleSliderChange(key, value);
@@ -63,12 +55,25 @@ export default function SortingSettings({
     }
   };
 
+  const [internalAttributes, setInternalAttributes] = useState(
+    sliders.reduce((acc, s) => {
+      // default: pokud atribut existuje v options, použij jeho value
+      const option = attributesOptions.find((o) => o.value === s.key);
+      acc[s.key] = option ? option.value : ""; // pokud není, nech "-"
+      return acc;
+    }, {} as Record<string, string>)
+  );
+
+  const [selectedPreset, setSelectedPreset] = useState("custom");
+  const isCustom = selectedPreset === "custom";
+
   const onAttributeChange = (key: string, attr: string) => {
-    if (handleAttributeChange) {
-      handleAttributeChange(key, attr);
-    } else {
-      setInternalAttributes({ ...internalAttributes, [key]: attr });
-    }
+    if (Object.values(internalAttributes).includes(attr)) return;
+
+    setInternalAttributes((prev: typeof internalAttributes) => ({
+      ...prev,
+      [key]: attr,
+    }));
   };
 
   const sliderContainerRef = useRef<HTMLDivElement | null>(null);
@@ -129,22 +134,82 @@ export default function SortingSettings({
           />
 
           {selectedSort === "combined" && (
+            <>
+              <Dropdown
+                className="premade-options-dropdown"
+                label="Možnosti"
+                options={sliderPresets.map((p) => ({
+                  label: p.label,
+                  value: p.key,
+                }))}
+                selected={selectedPreset}
+                onChange={(val) => {
+                  setSelectedPreset(val);
+
+                  if (val === "custom") return;
+
+                  const preset = sliderPresets.find((p) => p.key === val);
+                  if (!preset) return;
+
+                  // Nastavení atributů podle presetu
+                  if (preset) {
+                    const newAttributes: Record<string, string> = {};
+                    const newValues: Record<string, number> = {};
+
+                    sliders.forEach((s) => {
+                      if (preset.sliders[s.key]) {
+                        // pokud preset má slider, použij jeho hodnoty
+                        newAttributes[s.key] = preset.sliders[s.key].attribute;
+                        newValues[s.key] = preset.sliders[s.key].value;
+                      } else {
+                        // jinak nech default
+                        newAttributes[s.key] = s.key; // nebo null/first option
+                        newValues[s.key] = s.value;
+                      }
+                    });
+
+                    setInternalAttributes(newAttributes);
+                    setInternalSliderValues(newValues);
+                  }
+                }}
+              />
+            </>
+          )}
+
+          {selectedSort === "combined" && (
             <div
               className="slider-container priority-slider"
               ref={sliderContainerRef}
             >
-              {sliders.map((s) => (
-                <SliderGroup
-                  key={s.key}
-                  slider={s}
-                  onChange={(val) => onSliderChange(s.key, val)}
-                  attributesOptions={attributesOptions}
-                  onAttributeChange={(attr) => {
-                    onAttributeChange(s.key, attr);
-                    updateDropdownWidths(); // měření po změně dropdownu
-                  }}
-                />
-              ))}
+              {(() => {
+                // Definice proměnné před renderem
+                const slidersToRender =
+                  selectedPreset === "custom"
+                    ? sliders
+                    : sliders.filter(
+                        (s) =>
+                          sliderPresets.find((p) => p.key === selectedPreset)
+                            ?.sliders[s.key]
+                      );
+
+                return slidersToRender.map((s) => (
+                  <SliderGroup
+                    key={s.key}
+                    slider={s}
+                    value={internalSliderValues[s.key]}
+                    disabled={!isCustom}
+                    attributesOptions={attributesOptions}
+                    selectedAttr={internalAttributes[s.key]}
+                    usedAttributes={Object.values(internalAttributes)}
+                    onChange={(val) => onSliderChange(s.key, val)}
+                    onAttributeChange={(attr) => {
+                      if (!isCustom) return;
+                      onAttributeChange(s.key, attr);
+                      updateDropdownWidths();
+                    }}
+                  />
+                ));
+              })()}
             </div>
           )}
         </div>
