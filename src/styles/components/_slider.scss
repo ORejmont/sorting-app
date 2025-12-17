@@ -20,6 +20,17 @@ $tick-size: abs.rem(8);
       width: initial;
       max-width: abs.rem(180);
     }
+
+    .dropdown-menu {
+      border-radius: abs.$border-radius-small;
+
+      .dropdown-option {
+
+        &.active {
+          display: none;
+        }
+      }
+    }
   }
 }
 

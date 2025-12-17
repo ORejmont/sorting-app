@@ -53,8 +53,8 @@ export default function Dropdown({
     V čistém JS by to odpovídalo:
     document.querySelector(".dropdown-menu")
   */
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   /*
     Funkce, která se zavolá při kliknutí na položku v menu

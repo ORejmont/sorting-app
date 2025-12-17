@@ -18,7 +18,7 @@ export default function SliderGroup({
   const [value, setValue] = useState(slider.value);
   const [inverted, setInverted] = useState(false);
   const [selectedAttr, setSelectedAttr] = useState(attributesOptions[0].value);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const max = slider.max;
   const min = slider.min;

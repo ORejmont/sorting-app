@@ -71,7 +71,7 @@ export default function SortingSettings({
     }
   };
 
-  const sliderContainerRef = useRef<HTMLDivElement>(null);
+  const sliderContainerRef = useRef<HTMLDivElement | null>(null);
 
   const updateDropdownWidths = () => {
     if (!sliderContainerRef.current) return;
