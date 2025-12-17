@@ -24,12 +24,12 @@ $tick-size: abs.rem(8);
     .dropdown-menu {
       border-radius: abs.$border-radius-small;
 
-      .dropdown-option {
+      // .dropdown-option {
 
-        &.active {
-          display: none;
-        }
-      }
+      //   &.active {
+      //     display: none;
+      //   }
+      // }
     }
   }
 }
